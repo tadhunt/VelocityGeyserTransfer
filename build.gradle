@@ -1,0 +1,50 @@
+plugins {
+    id 'net.kyori.blossom' version '1.2.0'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+
+group 'com.tadhunt'
+version '0.0.1'
+description 'Velocity plugin to transfer Bedrock players connected via Geyser to Bedrock servers.'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "velocity"
+        setUrl("https://repo.velocitypowered.com/snapshots/")
+    }
+    maven {
+        setUrl("https://repo.spongepowered.org/maven")
+    }
+    maven {
+        setUrl("https://repo.velocitypowered.com/snapshots/")
+    }
+    maven {
+        setUrl("https://libraries.minecraft.net/")
+    }
+    maven {
+        setUrl("https://repo.opencollab.dev/main/")
+    }
+}
+
+defaultTasks 'clean', 'build', 'shadowJar'
+
+dependencies {
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+
+    compileOnly group: 'org.geysermc.geyser', name: 'api', version:'2.1.0-SNAPSHOT'
+
+    compileOnly group: 'com.velocitypowered', name: 'velocity-api', version: '1.1.5'
+}
+
+blossom {
+    replaceToken '@ID@', name.replace(" ", "").toLowerCase()
+    replaceToken '@NAME@', name
+    replaceToken '@VERSION@', version
+    replaceToken '@DESCRIPTION@', description
+}
+
+configurations {
+}
