@@ -69,11 +69,18 @@ public class VelocityGeyserTransfer {
 			return;
 		}
 
-		if(this.addr == null || this.port == 0)  {
-			logger.info(String.format("VelocityGeyserTransfer: uuid %s: addr not set (ignore)", uuid.toString()));
+		String name = connection.bedrockUsername();
+		if(name == null) {
+			logger.info(String.format("VelocityGeyserTransfer: uuid %s: no bedrock username (ignore)", uuid.toString()));
 			return;
 		}
-		logger.info(String.format("VelocityGeyserTransfer: uuid %s: transfer to [%s]:%d", uuid.toString(), this.addr, this.port));
+
+		if(this.addr == null || this.port == 0)  {
+			logger.info(String.format("VelocityGeyserTransfer: Player(%s, %s): addr not set (ignore)", name, uuid.toString()));
+			return;
+		}
+		logger.info(String.format("VelocityGeyserTransfer: Player(%s, %s) %s: transfer to [%s]:%d", name, uuid.toString(), this.addr, this.port));
+		connection.transfer(this.addr, this.port);
 	}
 
 	public void setServer(String addr, int port) {
