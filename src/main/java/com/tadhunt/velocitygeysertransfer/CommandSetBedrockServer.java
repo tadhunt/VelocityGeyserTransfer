@@ -7,10 +7,10 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
 
 public class CommandSetBedrockServer implements SimpleCommand {
-//	private final VelocityGeyserTransfer plugin;
+	private VelocityGeyserTransfer plugin;
 
 	public CommandSetBedrockServer(VelocityGeyserTransfer plugin) {
-//		this.plugin = plugin;
+		this.plugin = plugin;
 	}
 
 	@Override
@@ -22,7 +22,12 @@ public class CommandSetBedrockServer implements SimpleCommand {
 			source.sendMessage(Component.text("bad args").color(NamedTextColor.RED));
 			return;
 		}
+
+        String addr = args[0];
+        int    port = Integer.parseInt(args[1]);
+
+        this.plugin.setServer(addr, port);
 		
-		source.sendMessage(Component.text("good args").color(NamedTextColor.AQUA));
+		source.sendMessage(Component.text(String.format("Bedrock players will be transferred to [%s]:%d", addr, port)));
 	}
 }
