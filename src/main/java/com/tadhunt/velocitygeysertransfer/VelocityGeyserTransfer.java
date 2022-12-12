@@ -15,6 +15,9 @@ import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 
+import org.geysermc.geyser.api.GeyserApi;
+import org.geysermc.geyser.api.connection.GeyserConnection;
+
 import lombok.Getter;
 import org.slf4j.Logger;
 
@@ -53,9 +56,24 @@ public class VelocityGeyserTransfer {
 	@Subscribe
 	public void onServerChooseEvent(PlayerChooseInitialServerEvent chooseServerEvent) {
 		UUID uuid = chooseServerEvent.getPlayer().getUniqueId();
-//		GeyserConnection connection = GeyserApi.api().connectionByUuid(uuid);
+		GeyserApi api = GeyserApi.api();
 
-		logger.info(String.format("VelocityGeyserTransfer: uuid %s connected", uuid.toString()));
+		if(api == null) {
+			logger.info("VelocityGeyserTransfer: GeyserApi not yet initialized (ignore)");
+			return;
+		}
+		GeyserConnection connection = GeyserApi.api().connectionByUuid(uuid);
+
+		if(connection == null) {
+			logger.info(String.format("VelocityGeyserTransfer: uuid %s: not a bedrock player (ignore)", uuid.toString()));
+			return;
+		}
+
+		if(this.addr == null || this.port == 0)  {
+			logger.info(String.format("VelocityGeyserTransfer: uuid %s: addr not set (ignore)", uuid.toString()));
+			return;
+		}
+		logger.info(String.format("VelocityGeyserTransfer: uuid %s: transfer to [%s]:%d", uuid.toString(), this.addr, this.port));
 	}
 
 	public void setServer(String addr, int port) {
