@@ -79,6 +79,7 @@ public class VelocityGeyserTransfer {
 			logger.info(String.format("VelocityGeyserTransfer: Player(%s, %s): addr not set (ignore)", name, uuid.toString()));
 			return;
 		}
+		
 		logger.info(String.format("VelocityGeyserTransfer: Player(%s, %s) %s: transfer to [%s]:%d", name, uuid.toString(), this.addr, this.port));
 		connection.transfer(this.addr, this.port);
 	}
