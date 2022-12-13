@@ -56,34 +56,13 @@ public class VelocityGeyserTransfer {
 
 	@Subscribe
 	public void onServerChooseEvent(PlayerChooseInitialServerEvent chooseServerEvent) {
-		GeyserApi api = GeyserApi.api();
-
-		if(api == null) {
-			logger.info("VelocityGeyserTransfer: GeyserApi not yet initialized (ignore)");
-			return;
-		}
 
 		UUID uuid = chooseServerEvent.getPlayer().getUniqueId();
 		logger.info(String.format("uuid: %s", uuid.toString()));
 
-		List<? extends GeyserConnection> connections = GeyserApi.api().onlineConnections();
-		GeyserConnection connection = null;
-        for (GeyserConnection c : connections) {
-            logger.info(String.format("java %s bedrock %s javauuid %s xuid %s", c.javaUsername(), c.bedrockUsername(), c.javaUuid().toString(), c.xuid()));
-
-			UUID cUuid = c.javaUuid();
-			if(uuid.equals(cUuid)) {
-				connection = c;
-			}
-        }
+		GeyserConnection connection = findConnection(uuid);
 		if(connection == null) {
-			logger.info(String.format("uuid %s is not a bedrock player (ignore)", uuid.toString()));
-			return;
-		}
-		
-		GeyserConnection c = GeyserApi.api().connectionByUuid(uuid);
-		if(c == null) {
-			logger.info(String.format("bug: found by uuid compare, but not via connectionByUuid", uuid.toString()));
+			logger.info(String.format("uuid %s: not a bedrock player (ignore)", uuid.toString()));
 			return;
 		}
 
@@ -108,6 +87,37 @@ public class VelocityGeyserTransfer {
 
 		connection.transfer(this.addr, this.port);
 		chooseServerEvent.setInitialServer(null);
+	}
+
+	private GeyserConnection findConnection(UUID uuid) {
+		GeyserApi api = GeyserApi.api();
+
+		if(api == null) {
+			logger.info("GeyserApi not yet initialized");
+			return null;
+		}
+
+		List<? extends GeyserConnection> connections = GeyserApi.api().onlineConnections();
+		GeyserConnection connection = null;
+        for (GeyserConnection c : connections) {
+            logger.info(String.format("java %s bedrock %s javauuid %s xuid %s", c.javaUsername(), c.bedrockUsername(), c.javaUuid().toString(), c.xuid()));
+
+			UUID cUuid = c.javaUuid();
+			if(uuid.equals(cUuid)) {
+				connection = c;
+			}
+        }
+
+		if(connection == null) {
+			return null;
+		}
+		
+		GeyserConnection c = api.connectionByUuid(uuid);
+		if(c == null) {
+			logger.info(String.format("bug: found by uuid compare, but not via connectionByUuid", uuid.toString()));
+		}
+
+		return connection;
 	}
 
 	public void setServer(String addr, int port) {
