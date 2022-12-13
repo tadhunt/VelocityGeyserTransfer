@@ -1,0 +1,16 @@
+{
+  "id": "velocitygeysertransfer",
+  "name": "Velocity Geyser Transfer",
+  "version": "0.0.1",
+  "description": "Velocity plugin to transfer Bedrock players connected via Geyser to Bedrock servers.",
+  "authors": [
+    "tadhunt"
+  ],
+  "dependencies": [
+    {
+      "id": "geyser",
+      "optional": false
+    }
+  ],
+  "main": "com.tadhunt.velocitygeysertransfer.VelocityGeyserTransfer"
+}
